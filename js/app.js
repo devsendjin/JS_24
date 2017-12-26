@@ -15,7 +15,7 @@ let rand = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-let sendMsg = () => {
+let sendMsg = async () => {
     let form = document.form_chat;
     let send = form.sendMessage;
     let get = form.getMessage;
@@ -32,7 +32,8 @@ let sendMsg = () => {
     }
 
     send.value = '';
-    get.value = `${get.value}\nBrowser: ${chat()}`;
+    get.value = `${get.value}\nBrowser: ${chat().then(()=> message).catch((err) => {console.log(err);})}`;
+    // chat().then(()=> get.value = `${get.value}\nBrowser: ${chat().then(()=> message)}`)
 };
 
 function timeout(message, time = 0) {
@@ -44,12 +45,13 @@ function timeout(message, time = 0) {
 
 async function randomMessage() {
     let message = answers[rand(0, 9)];
+    console.log(message);
     return timeout(message, 1);
 }
 
 async function chat() {
-    const message = await randomMessage();
-    return message;
+    let message = await randomMessage();
+    // return message;
 }
 
 $("#send-msg").on("click", sendMsg);
